@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szq.CarMapper">
+    <select id="selectAll" resultType="car">
+        select
+        id,car_num as carNum,brand,guide_price as guidePrice,produce_time as produceTime,car_type as carType
+        from t_car
+    </select>
+
+    <!--
+     1.专门定义一个结果映射，在这个结果映射当中指定数据库表的字段名和Java类的属性名的对应关系
+     2.type属性：用来指定POJO类的类名
+     3.id属性：指定resultMap的唯一标识。这个id将来要在select标签中使用
+
+    -->
+    <resultMap id="carResultMap" type="Car">
+        <!--如果数据库中有主键值，建议这里配置一个id标签,提高效率-->
+        <id property="id" column="id"></id>
+        <!--property后面填写POJO类的属性-->
+        <!--column后面填写数据库表的字段名-->
+        <result property="carNum" column="car_num"></result>
+        <!--<result property="brand" column="brand"></result>-->
+        <result property="guidePrice" column="guide_price"></result>
+        <result property="produceTime" column="produce_time"></result>
+        <result property="carType" column="car_type"></result>
+    </resultMap>
+    <!--select标签的属性，用来指定使用哪个结果映射。resultMao后面的值是resultMap的id-->
+    <select id="selectAllResultMap" resultMap="carResultMap">
+        select * from t_car
+    </select>
+
+    <select id="selectAllByMapUnderscoreToCamelCase" resultType="car">
+        select * from t_car
+    </select>
+
+    <select id="selectTotal" resultType="long">
+        select count(*) from t_car
+    </select>
+
+</mapper>

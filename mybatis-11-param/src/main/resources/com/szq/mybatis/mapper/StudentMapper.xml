@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szq.mybatis.mapper.StudentMapper">
+    <!--
+    parameterType属性的作用
+    告诉mybatis框架，我这个方法的参数类型是什么类型
+    可以省略不写
+    -->
+    <select id="selectById" resultType="Student" parameterType="long">
+        select * from t_student where id=#{id}
+    </select>
+
+    <select id="selectByName" resultType="Student" parameterType="string">
+        select * from t_student where name=#{name}
+    </select>
+
+    <select id="selectByBirth" resultType="Student">
+        select * from t_student where birth=#{birth}
+    </select>
+
+    <select id="selectBySex" resultType="Student">
+        select * from t_student where sex=#{sex}
+    </select>
+
+    <insert id="insertStudentByMap" parameterType="map">
+        insert into t_student(id,name,age,height,birth,sex) values(null,#{name},#{age},#{height},#{birth},#{sex})
+    </insert>
+
+    <insert id="insertStudentPOJO" parameterType="student">
+        insert into t_student(id,name,age,height,birth,sex) values(null,#{name},#{age},#{height},#{birth},#{sex})
+    </insert>
+
+    <select id="selectByNameAndSex" resultType="student">
+<!--        select * from t_student where name=#{arg0} and sex=#{arg1}-->
+        select * from t_student where name=#{param1} and sex=#{param2}
+    </select>
+
+    <select id="selectByNameAndSex2" resultType="student">
+        select * from t_student where name=#{name} and sex=#{sex}
+    </select>
+</mapper>

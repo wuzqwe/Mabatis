@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+    <!--insert语句，id是这条语句的唯一标识。这个id就代表SQL语句-->
+    <insert id="insertCar">
+      insert into t_user values(#{id},#{name},#{age})
+    </insert>
+
+    <select id="selectById" resultType="com.szq.mybatis.pojo.User">
+      select * from t_user where id=#{id}
+    </select>
+</mapper>

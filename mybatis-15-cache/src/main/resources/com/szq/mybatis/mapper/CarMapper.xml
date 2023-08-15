@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szq.CarMapper">
+    <!--
+        默认情况下,二级缓存机制是开启的
+        只需要在对应的SqlMapper.xml文件中添加以下标签。用来展示我使用该二级缓存
+    -->
+  <!--  <cache/>-->
+    <!--集成Ehcache组件-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+    <select id="selectById" resultType="car">
+        select * from t_car where id=#{id}
+    </select>
+
+    <select id="selectById2" resultType="car">
+        select * from t_car where id=#{id}
+    </select>
+</mapper>

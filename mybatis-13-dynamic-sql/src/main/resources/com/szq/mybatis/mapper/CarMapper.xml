@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szq.CarMapper">
+<select id="selectByMultiCondition" resultType="car">
+    select * from t_car where 1=1
+    <!--
+        1.if标签中的属性是必须的
+        2.if标签中test属性的值是false或true
+        3.如果test是true，则if标签的SQL语句就会拼接。反之则不会拼接
+        4.test属性中可以使用的是:
+        当使用了@Param注解，那么test中要出现的是@Param注解指定的参数名。@Param("brand"),那么这里只能使用brand
+        当没有使用@Param注解，那么test中出现的是：param1,param2,param3,arg0,arg1,arg2
+        当使用POJO,那么test中出现的是POJO类的属性名
+    -->
+    <if test="brand!=null and brand!=''">
+        and brand like "%"#{brand}"%"
+    </if>
+    <if test="guidePrice!=null and guidePrice!=''">
+        and guide_price>#{guidePrice}
+    </if>
+    <if test="carType!=null and carType!=''">
+        and car_type=#{carType}
+    </if>
+</select>
+
+
+    <select id="selectByMultiConditionWithWhere" resultType="car">
+        select * from t_car
+        <where>
+            <!--where标签专门负责where子句动态生成的-->
+            <if test="brand!=null and brand!=''">
+                brand like "%"#{brand}"%"
+            </if>
+            <if test="guidePrice!=null and guidePrice!=''">
+                and guide_price>#{guidePrice}
+            </if>
+            <if test="carType!=null and carType!=''">
+                and car_type=#{carType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByMultiConditionWithTrim" resultType="car">
+        select * from t_car
+        <!--
+        suffix:加后缀
+        prefix:加前缀
+        suffixOverrides:删除后缀
+        prefixOverrides:删除前缀
+        -->
+        <trim prefixOverrides="" suffix="" prefix="where" suffixOverrides="and|or">
+            <if test="brand!=null and brand!=''">
+                brand like "%"#{brand}"%" and
+            </if>
+            <if test="guidePrice!=null and guidePrice!=''">
+                 guide_price>#{guidePrice} and
+            </if>
+            <if test="carType!=null and carType!=''">
+                car_type=#{carType}
+            </if>
+        </trim>
+    </select>
+
+    <update id="updateById">
+        update t_car set
+        car_num = #{carNum},
+        brand=#{brand},
+        guide_price=#{guidePrice},
+        produce_time=#{produceTime},
+        car_type=#{carType}
+        where
+        id=#{id}
+    </update>
+
+    <update id="updateBySet">
+        update t_car
+        <set>
+            <if test="carNum!=null and carNum!=''">
+                car_num=#{carNum},
+            </if>
+            <if test="brand!=null and brand!=''">
+                brand=#{brand},
+            </if>
+            <if test="guidePrice!=null and guidePrice!=''">
+                guide_price=#{guidePrice},
+            </if>
+            <if test="produceTime!=null and produceTime!=''">
+                produce_time=#{produceTime},
+            </if>
+            <if test="carType!=null and carType!=''">
+                car_type=#{carType},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectByChoose" resultType="car">
+        select * from t_car
+        <where>
+            <choose>
+                <when test="brand!=null and brand!=''">
+                    brand like "%"#{brand}"%"
+                </when>
+                <when test="guidePrice!=null and guidePrice!=''">
+                    guide_price>#{guidePrice} and
+                </when>
+                <otherwise>
+                    car_type=#{carType}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <!--
+    foreach标签的属性
+    collection:指定数组或者集合
+    item：代表数组或集合中的元素
+    separator：循环之间的分隔符
+    -->
+    <delete id="deleteByIds">
+        delete from t_car where id in (
+        <foreach collection="ids" item="aaa" separator=",">
+            #{aaa}
+        </foreach>
+
+        )
+    </delete>
+
+    <insert id="insertBatch">
+        insert into t_car values
+        <foreach collection="cars" separator="," item="car">
+            (null,#{car.carNum},#{car.brand},#{car.guidePrice},#{car.produceTime},#{car.carType})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByIds2">
+        delete from t_car where
+        <foreach collection="ids" item="id" separator="or">
+            id=#{id}
+        </foreach>
+    </delete>
+</mapper>
